@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+	<changeSet id="1708357925" author="nathan-ruhanga">
+	    <createTable tableName="sale_order_lines">
+	        <column name="sale_order_line_id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="sale_order_line_pkey" />
+			</column>
+	        <column name="sale_order_name" type="VARCHAR"/>
+	        <column name="sequence" type="INTEGER"/>
+	        <column name="product_id" type="INTEGER"/>
+	        <column name="product_name" type="VARCHAR"/>
+	        <column name="product_code" type="VARCHAR"/>
+	        <column name="product_external_id" type="VARCHAR"/>
+	        <column name="quantity" type="NUMERIC(24,0)"/>
+	        <column name="unit_price" type="NUMERIC(24,2)"/>
+	        <column name="subtotal" type="NUMERIC(24,2)"/>
+	        <column name="total" type="NUMERIC(24,2)"/>
+	        <column name="line_creation_date" type="TIMESTAMP"/>
+	        <column name="line_last_modified_date" type="TIMESTAMP"/>
+	        <column name="customer_name" type="VARCHAR"/>
+	        <column name="customer_uuid" type="VARCHAR"/>
+	        <column name="customer_email" type="VARCHAR"/>
+	        <column name="customer_phone" type="VARCHAR"/>
+	        <column name="invoicing_status" type="VARCHAR"/>
+	    </createTable>
+	</changeSet>
+</databaseChangeLog>

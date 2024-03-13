@@ -1,0 +1,20 @@
+CREATE TABLE `person_attribute_type` (
+  `person_attribute_type_id` int,
+  `name` VARCHAR,
+  `description` VARCHAR,
+  `format` VARCHAR,
+  `foreign_key` int,
+  `searchable` BOOLEAN,
+  `creator` int,
+  `date_created` TIMESTAMP,
+  `changed_by` int,
+  `date_changed` TIMESTAMP,
+  `retired` BOOLEAN,
+  `retired_by` int,
+  `date_retired` TIMESTAMP,
+  `retire_reason` VARCHAR,
+  `edit_privilege` VARCHAR,
+  `sort_weight` double,
+  `uuid` VARCHAR,
+  PRIMARY KEY (`person_attribute_type_id`) NOT ENFORCED
+)
