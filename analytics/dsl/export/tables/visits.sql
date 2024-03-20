@@ -12,7 +12,7 @@ CREATE TABLE visits (
     patient_age_at_visit NUMERIC(24,0),
     patient_dead BOOLEAN,
     patient_death_date TIMESTAMP,
-    patient_cause_of_death BIGINT,
+    patient_cause_of_death INT,
     visit_uuid VARCHAR,
     visit_type_uuid VARCHAR,
     location_uuid VARCHAR,
