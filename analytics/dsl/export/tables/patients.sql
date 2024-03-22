@@ -32,7 +32,7 @@ CREATE TABLE patients (
     attributes VARCHAR,
     dead BOOLEAN,
     death_date TIMESTAMP,
-    cause_of_death BIGINT,
+    cause_of_death INT,
     creator BIGINT,
     date_created TIMESTAMP,
     person_voided BOOLEAN,

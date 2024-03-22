@@ -5,7 +5,7 @@ CREATE TABLE `person` (
   `birthdate_estimated` BOOLEAN,
   `dead` BOOLEAN,
   `death_date` TIMESTAMP,
-  `cause_of_death` BIGINT,
+  `cause_of_death` INT,
   `creator` int,
   `date_created` TIMESTAMP,
   `changed_by` int,
