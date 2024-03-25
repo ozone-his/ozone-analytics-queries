@@ -50,7 +50,7 @@ fileSinks:
     # The path for the queries to use for export
     queryPath: '${EXPORT_SOURCE_QUERIES_PATH:-/export/queries}'
     # The path to use for the exported output
-    exportOutputPath: '${EXPORT_OUTPUT_PATH:-/tmp/parquet}'
+    exportOutputPath: '/parquet'
     # The tag to use for the exported output. This is used to create a subdirectory in the exportOutputPath
     exportOutPutTag: '${EXPORT_OUTPUT_TAG:-location1}'
     # The format for export files. Currently only parquet and csv are supported

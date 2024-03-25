@@ -106,4 +106,5 @@ GROUP BY
        person.creator,
        person.date_created,
        person.voided,
-       person.void_reason
+       person.void_reason,
+       person.uuid
