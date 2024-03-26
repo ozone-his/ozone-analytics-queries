@@ -22,7 +22,7 @@
 	        <column name="patient_age_at_visit" type="NUMERIC(24,0)"/>
 	        <column name="patient_dead" type="BOOLEAN"/>
 	        <column name="patient_death_date" type="TIMESTAMP"/>
-	        <column name="patient_cause_of_death" type="BIGINT"/>
+	        <column name="patient_cause_of_death" type="INT"/>
 	        <column name="visit_uuid" type="VARCHAR"/>
 	        <column name="visit_type_uuid" type="VARCHAR"/>
 	        <column name="location_uuid" type="VARCHAR"/>
@@ -130,7 +130,7 @@
 	        <column name="attributes" type="TEXT"/>
 	        <column name="dead" type="BOOLEAN"/>
 	        <column name="death_date" type="TIMESTAMP"/>
-	        <column name="cause_of_death" type="BIGINT"/>
+	        <column name="cause_of_death" type="INT"/>
 	        <column name="creator" type="BIGINT"/>
 	        <column name="date_created" type="TIMESTAMP"/>
 	        <column name="person_voided" type="BOOLEAN"/>
