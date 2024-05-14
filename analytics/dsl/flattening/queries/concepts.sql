@@ -11,4 +11,4 @@ FROM `concept`
 LEFT JOIN `concept_reference_map` `concept_reference_map` ON `concept`.`concept_id` = `concept_reference_map`.`concept_id`
 LEFT JOIN `concept_reference_term`   `concept_reference_term` ON `concept_reference_map`.`concept_reference_term_id` = `concept_reference_term`.`concept_reference_term_id`
 LEFT JOIN `concept_reference_source`  `concept_reference_source` ON `concept_reference_term`.`concept_source_id` = `concept_reference_source`.`concept_source_id`
-LEFT JOIN `concept_name`  `concept_name` ON `concept`.`concept_id` = `concept_name`.`concept_id`
+LEFT JOIN `concept_name`  `concept_name` ON `concept`.`concept_id` = `concept_name`.`concept_id` AND `concept_name`.`locale` LIKE 'en' AND `concept_name`.`voided` = false AND `concept_name`.`locale_preferred` = true
