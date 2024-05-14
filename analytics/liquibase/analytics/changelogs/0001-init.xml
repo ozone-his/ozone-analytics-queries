@@ -78,19 +78,19 @@
 	        <column name="question_uuid" type="VARCHAR"/>
 	    </createTable>
 	</changeSet>
-	<changeSet author="enyachoke" id="1629094153790-5">
+	<changeSet author="enyachoke" id="1629094153790-5-test">
 		<createTable tableName="concepts">
 			<column name="concept_id" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="concepts_pkey" />
 			</column>
-			<column name="concept_mapping_source" type="TEXT" />
-			<column name="concept_mapping_code" type="TEXT" />
-			<column name="concept_mapping_name" type="TEXT" />
+			<column name="concept_mappings_source_Codes" type="TEXT" />
 			<column name="name" type="TEXT" />
 			<column name="locale" type="TEXT" />
 			<column name="locale_preferred" type="BOOLEAN" />
 			<column name="retired" type="BOOLEAN" />
-			<column name="uuid" type="TEXT" />
+			<column name="uuid" type="VARCHAR" />
+			<column name="answer_concepts_uuids" type="TEXT" />
+			<column name="member_concepts_uuids" type="TEXT" />
 		</createTable>
 	</changeSet>
 	<changeSet author="mksrom" id="1629094153790-6">
