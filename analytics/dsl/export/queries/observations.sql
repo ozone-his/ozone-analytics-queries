@@ -1,1 +1,1 @@
-INSERT into observations SELECT t.*  from analytics.analytics.observations t
+INSERT into observations SELECT t.*  from {ANALYTICS_CATALOG}.analytics.observations t
