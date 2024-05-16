@@ -83,7 +83,7 @@
 			<column name="concept_id" type="BIGINT">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="concepts_pkey" />
 			</column>
-			<column name="concept_mappings_source_Codes" type="TEXT" />
+			<column name="concept_mappings_source_codes" type="TEXT" />
 			<column name="name" type="TEXT" />
 			<column name="locale" type="TEXT" />
 			<column name="locale_preferred" type="BOOLEAN" />
