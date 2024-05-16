@@ -33,14 +33,14 @@ SELECT
     concept.uuid AS question_uuid
 FROM
     obs
-    LEFT JOIN concept_name value_concept_name ON obs.value_coded = value_concept_name.concept_id
+    LEFT JOIN concept_name value_concept_name ON obs.value_coded = value_concept_name.concept_id AND value_concept_name.locale LIKE 'en' AND value_concept_name.voided = false AND value_concept_name.locale_preferred = true
     AND obs.value_coded IS NOT NULL
     LEFT JOIN encounter encounter ON obs.encounter_id = encounter.encounter_id
     LEFT JOIN visit visit ON encounter.visit_id = visit.visit_id
     LEFT JOIN encounter_type encounter_type ON encounter.encounter_type = encounter_type.encounter_type_id
     LEFT JOIN visit_type visit_type ON visit.visit_type_id = visit_type.visit_type_id
     LEFT JOIN location location ON obs.location_id = location.location_id
-    LEFT JOIN concept_name concept_concept_name ON obs.concept_id = concept_concept_name.concept_id
+    LEFT JOIN concept_name concept_concept_name ON obs.concept_id = concept_concept_name.concept_id AND concept_concept_name.locale LIKE 'en' AND concept_concept_name.voided = false AND concept_concept_name.locale_preferred = true
     LEFT JOIN person patient ON obs.person_id = patient.person_id
     LEFT JOIN person creator ON obs.creator = creator.person_id
     LEFT JOIN concept concept ON obs.concept_id = concept.concept_id
