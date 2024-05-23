@@ -333,4 +333,45 @@
 			<column name="void_reason" type="VARCHAR" />
 		</createTable>
 	</changeSet>
+	<changeSet author="ruhanga" id="1716275877531">
+	    <createTable tableName="locations">
+	        <column name="location_id" type="BIGINT">
+	            <constraints nullable="false" primaryKey="true" primaryKeyName="locations_pkey" />
+	        </column>
+	        <column name="name" type="VARCHAR"/>
+	        <column name="description" type="VARCHAR"/>
+	        <column name="address1" type="VARCHAR"/>
+	        <column name="address2" type="VARCHAR"/>
+	        <column name="city_village" type="VARCHAR"/>
+	        <column name="state_province" type="VARCHAR"/>
+	        <column name="postal_code" type="VARCHAR"/>
+	        <column name="country" type="VARCHAR"/>
+	        <column name="latitude" type="VARCHAR"/>
+	        <column name="longitude" type="VARCHAR"/>
+	        <column name="creator" type="BIGINT"/>
+	        <column name="date_created" type="TIMESTAMP"/>
+	        <column name="county_district" type="VARCHAR"/>
+	        <column name="address3" type="VARCHAR"/>
+	        <column name="address4" type="VARCHAR"/>
+	        <column name="address5" type="VARCHAR"/>
+	        <column name="address6" type="VARCHAR"/>
+	        <column name="retired" type="BOOLEAN"/>
+	        <column name="retired_by" type="BIGINT"/>
+	        <column name="date_retired" type="TIMESTAMP"/>
+	        <column name="retire_reason" type="VARCHAR"/>
+	        <column name="parent_location" type="BIGINT"/>
+	        <column name="uuid" type="VARCHAR"/>
+	        <column name="changed_by" type="BIGINT"/>
+	        <column name="date_changed" type="TIMESTAMP"/>
+	        <column name="address7" type="VARCHAR"/>
+	        <column name="address8" type="VARCHAR"/>
+	        <column name="address9" type="VARCHAR"/>
+	        <column name="address10" type="VARCHAR"/>
+	        <column name="address11" type="VARCHAR"/>
+	        <column name="address12" type="VARCHAR"/>
+	        <column name="address13" type="VARCHAR"/>
+	        <column name="address14" type="VARCHAR"/>
+	        <column name="address15" type="VARCHAR"/>
+	    </createTable>
+	</changeSet>
 </databaseChangeLog>

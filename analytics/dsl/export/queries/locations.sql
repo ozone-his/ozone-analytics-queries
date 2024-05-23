@@ -1,0 +1,1 @@
+INSERT into locations SELECT t.*  from  analytics.analytics.locations t
