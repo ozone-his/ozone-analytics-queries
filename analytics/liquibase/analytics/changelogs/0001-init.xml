@@ -340,6 +340,7 @@
 	        </column>
 	        <column name="name" type="VARCHAR"/>
 	        <column name="description" type="VARCHAR"/>
+	        <column name="location_tags" type="VARCHAR"/>
 	        <column name="address1" type="VARCHAR"/>
 	        <column name="address2" type="VARCHAR"/>
 	        <column name="city_village" type="VARCHAR"/>
