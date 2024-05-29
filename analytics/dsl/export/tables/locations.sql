@@ -2,6 +2,7 @@ CREATE TABLE locations (
     location_id BIGINT,
     name VARCHAR,
     description VARCHAR,
+    location_tags VARCHAR,
     address1 VARCHAR,
     address2 VARCHAR,
     city_village VARCHAR,
