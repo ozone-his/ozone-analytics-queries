@@ -23,7 +23,7 @@ SELECT
     obs.void_reason AS obs_void_reason,
     obs.previous_version AS previous_version_obs_id,
     obs.obs_group_id AS parent_obs_id,
-    value_concept_name.uuid AS answer_coded_uuid,
+    concept_answer.uuid AS answer_coded_uuid,
     creator.uuid AS creator_uuid,
     encounter.uuid AS encounter_uuid,
     visit.uuid AS visit_uuid,
@@ -44,3 +44,4 @@ FROM
     LEFT JOIN person patient ON obs.person_id = patient.person_id
     LEFT JOIN person creator ON obs.creator = creator.person_id
     LEFT JOIN concept concept ON obs.concept_id = concept.concept_id
+    LEFT JOIN concept concept_answer ON obs.value_coded = concept_answer.concept_id
