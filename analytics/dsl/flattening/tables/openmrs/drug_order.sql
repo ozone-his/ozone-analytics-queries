@@ -1,0 +1,21 @@
+CREATE TABLE `drug_order` (
+  `order_id` int,
+  `drug_inventory_id` int,
+  `dose` double,
+  `as_needed` BOOLEAN,
+  `dosing_type` VARCHAR,
+  `quantity` double,
+  `as_needed_condition` VARCHAR,
+  `num_refills` int,
+  `dosing_instructions` VARCHAR,
+  `duration` int,
+  `duration_units` int,
+  `quantity_units` int,
+  `route` int,
+  `dose_units` int,
+  `frequency` int,
+  `brand_name` VARCHAR,
+  `dispense_as_written` BOOLEAN,
+  `drug_non_coded` VARCHAR,
+  PRIMARY KEY (`order_id`) NOT ENFORCED
+)
