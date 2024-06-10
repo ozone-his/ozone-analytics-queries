@@ -1,1 +1,1 @@
-INSERT into encounters SELECT t.*  from analytics.analytics.encounters t
+INSERT into encounters SELECT t.*  from {ANALYTICS_CATALOG}.analytics.encounters t

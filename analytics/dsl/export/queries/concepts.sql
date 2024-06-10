@@ -1,1 +1,1 @@
-INSERT into concepts SELECT t.*  from  analytics.analytics.concepts t
+INSERT into concepts SELECT t.*  from  {ANALYTICS_CATALOG}.analytics.concepts t

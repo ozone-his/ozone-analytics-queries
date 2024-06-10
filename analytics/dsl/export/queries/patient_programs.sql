@@ -1,1 +1,1 @@
-INSERT into patient_programs SELECT t.*  from  analytics.analytics.patient_programs t
+INSERT into patient_programs SELECT t.*  from  {ANALYTICS_CATALOG}.analytics.patient_programs t

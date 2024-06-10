@@ -1,1 +1,1 @@
-INSERT into appointments SELECT t.*  from analytics.analytics.appointments t
+INSERT into appointments SELECT t.*  from {ANALYTICS_CATALOG}.analytics.appointments t

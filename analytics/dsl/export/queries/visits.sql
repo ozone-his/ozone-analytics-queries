@@ -1,1 +1,1 @@
-INSERT into visits SELECT t.*  from  analytics.analytics.visits t
+INSERT into visits SELECT t.*  from  {ANALYTICS_CATALOG}.analytics.visits t
