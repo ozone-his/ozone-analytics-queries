@@ -1,0 +1,22 @@
+CREATE TABLE `drug` (
+  `drug_id` int,
+  `concept_id` int,
+  `name` VARCHAR,
+  `combination` BOOLEAN,
+  `dosage_form` int,
+  `maximum_daily_dose` double,
+  `minimum_daily_dose` double,
+  `route` int,
+  `creator` int,
+  `date_created` TIMESTAMP,
+  `retired` BOOLEAN,
+  `changed_by` int,
+  `date_changed` TIMESTAMP,
+  `retired_by` int,
+  `date_retired` TIMESTAMP,
+  `retire_reason` VARCHAR,
+  `uuid` VARCHAR,
+  `strength` VARCHAR,
+  `dose_limit_units` int,
+  PRIMARY KEY (`drug_id`) NOT ENFORCED
+)
