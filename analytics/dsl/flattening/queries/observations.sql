@@ -2,7 +2,7 @@ SELECT
     obs.obs_id AS obs_id,
     obs.voided AS obs_voided,
     location.name AS location,
-    obs_datetime AS obs_date_time,
+    obs.obs_datetime AS obs_date_time,
     concept_concept_name.name AS question_label,
     concept_concept_name.name AS question_mapping,
     value_concept_name.name AS answer_coded,
@@ -29,10 +29,14 @@ SELECT
     visit.uuid AS visit_uuid,
     location.uuid AS location_uuid,
     obs.uuid AS obs_uuid,
+    parent_obs.uuid AS obs_group_uuid,
+    group_concept.uuid AS obs_group_concept_uuid,
     patient.uuid AS patient_uuid,
     concept.uuid AS question_uuid
 FROM
     obs
+    LEFT JOIN obs parent_obs ON parent_obs.obs_id = obs.obs_group_id
+    LEFT JOIN concept group_concept ON parent_obs.concept_id = group_concept.concept_id
     LEFT JOIN concept_name value_concept_name ON obs.value_coded = value_concept_name.concept_id AND value_concept_name.locale LIKE 'en' AND value_concept_name.voided = false AND value_concept_name.locale_preferred = true
     AND obs.value_coded IS NOT NULL
     LEFT JOIN encounter encounter ON obs.encounter_id = encounter.encounter_id

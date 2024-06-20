@@ -74,6 +74,8 @@
 	        <column name="visit_uuid" type="VARCHAR"/>
 	        <column name="location_uuid" type="VARCHAR"/>
 	        <column name="obs_uuid" type="VARCHAR"/>
+	        <column name="obs_group_uuid" type="VARCHAR"/>
+	        <column name="obs_group_concept_uuid" type="VARCHAR"/>
 	        <column name="patient_uuid" type="VARCHAR"/>
 	        <column name="question_uuid" type="VARCHAR"/>
 	    </createTable>

@@ -29,6 +29,8 @@ CREATE TABLE observations (
     visit_uuid VARCHAR,
     location_uuid VARCHAR,
     obs_uuid VARCHAR,
+    obs_group_uuid VARCHAR,
+    obs_group_concept_uuid VARCHAR,
     patient_uuid VARCHAR,
     question_uuid VARCHAR
 )
