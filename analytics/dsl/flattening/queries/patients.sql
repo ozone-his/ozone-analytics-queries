@@ -36,18 +36,31 @@ SELECT
     person_address.longitude AS address_longitude,
     (
         SELECT LISTAGG(
-            CONCAT_WS(': ', pa_type.name, 
+            CONCAT_WS(
+                ': ',
+                a.attribute_type_name,
+                a.attribute_value
+            ), ' / '
+        )
+        FROM (
+            SELECT DISTINCT
+                pa.person_id,
+                pa_type.name AS attribute_type_name,
                 CASE
                     WHEN pa_type.format = 'org.openmrs.Concept' THEN cn.name
                     ELSE pa.`value`
-                END
-            ), ' / '
-        )
-        FROM person_attribute pa
-        LEFT JOIN person_attribute_type pa_type ON pa.person_attribute_type_id = pa_type.person_attribute_type_id
-        LEFT JOIN concept c ON pa.`value` = c.uuid
-        LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id AND cn.locale_preferred = '1' AND cn.locale = 'en' AND cn.voided = '0'
-        WHERE pa.person_id = patient.patient_id
+                END AS attribute_value
+            FROM
+                person_attribute pa
+                LEFT JOIN person_attribute_type pa_type ON pa.person_attribute_type_id = pa_type.person_attribute_type_id
+                LEFT JOIN concept c ON pa.`value` = c.uuid
+                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
+            WHERE
+                pa.person_id = patient.patient_id
+                AND cn.locale_preferred = '1'
+                AND cn.locale = 'en'
+                AND cn.voided = '0'
+        ) AS a
     ) AS attributes,
     person.dead AS dead,
     person.death_date AS death_date,
