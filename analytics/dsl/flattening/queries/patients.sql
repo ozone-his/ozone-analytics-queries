@@ -3,11 +3,8 @@ SELECT
     person_name.given_name AS given_name,
     person_name.middle_name AS middle_name,
     person_name.family_name AS family_name,
-    (
-        SELECT LISTAGG(CONCAT_WS(': ', identifier_type.name, identifier.identifier), ', ')
-        FROM patient_identifier identifier
-        LEFT JOIN patient_identifier_type identifier_type ON identifier.identifier_type = identifier_type.patient_identifier_type_id
-        WHERE patient.patient_id = identifier.patient_id
+    LISTAGG(DISTINCT
+        CONCAT_WS(': ', identifier_type.name, identifier.identifier), ', '
     ) AS identifiers,
     person.gender AS gender,
     person.birthdate AS birthdate,
@@ -34,33 +31,12 @@ SELECT
     person_address.address15 AS address_15,
     person_address.latitude AS address_latitude,
     person_address.longitude AS address_longitude,
-    (
-        SELECT LISTAGG(
-            CONCAT_WS(
-                ': ',
-                a.attribute_type_name,
-                a.attribute_value
-            ), ' / '
-        )
-        FROM (
-            SELECT DISTINCT
-                pa.person_id,
-                pa_type.name AS attribute_type_name,
-                CASE
-                    WHEN pa_type.format = 'org.openmrs.Concept' THEN cn.name
-                    ELSE pa.`value`
-                END AS attribute_value
-            FROM
-                person_attribute pa
-                LEFT JOIN person_attribute_type pa_type ON pa.person_attribute_type_id = pa_type.person_attribute_type_id
-                LEFT JOIN concept c ON pa.`value` = c.uuid
-                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
-            WHERE
-                pa.person_id = patient.patient_id
-                AND cn.locale_preferred = '1'
-                AND cn.locale = 'en'
-                AND cn.voided = '0'
-        ) AS a
+    LISTAGG(DISTINCT
+        CONCAT_WS(
+            ': ',
+            a.attribute_type_name,
+            a.attribute_value
+        ), ' / '
     ) AS attributes,
     person.dead AS dead,
     person.death_date AS death_date,
@@ -74,6 +50,26 @@ FROM
 LEFT JOIN person ON patient.patient_id = person.person_id
 LEFT JOIN person_name ON person.person_id = person_name.person_id
 LEFT JOIN person_address ON person.person_id = person_address.person_id
+LEFT JOIN (
+    SELECT DISTINCT
+        pa.person_id,
+        pa_type.name AS attribute_type_name,
+        CASE
+            WHEN pa_type.format = 'org.openmrs.Concept' THEN cn.name
+            ELSE pa.`value`
+        END AS attribute_value
+    FROM
+        person_attribute pa
+    LEFT JOIN person_attribute_type pa_type ON pa.person_attribute_type_id = pa_type.person_attribute_type_id
+    LEFT JOIN concept c ON pa.`value` = c.uuid
+    LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
+    WHERE
+        cn.locale_preferred = '1'
+        AND cn.locale = 'en'
+        AND cn.voided = '0'
+) a ON a.person_id = person.person_id
+LEFT JOIN patient_identifier identifier ON patient.patient_id = identifier.patient_id
+LEFT JOIN patient_identifier_type identifier_type ON identifier.identifier_type = identifier_type.patient_identifier_type_id
 GROUP BY
     patient.patient_id,
     person_name.given_name,
@@ -82,6 +78,7 @@ GROUP BY
     person.gender,
     person.birthdate,
     person.birthdate_estimated,
+    person.uuid,
     person_address.city_village,
     person_address.county_district,
     person_address.state_province,
@@ -109,5 +106,4 @@ GROUP BY
     person.creator,
     person.date_created,
     person.voided,
-    person.void_reason,
-    person.uuid
+    person.void_reason
