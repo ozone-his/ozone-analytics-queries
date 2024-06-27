@@ -392,4 +392,104 @@
 	        <column name="address15" type="VARCHAR"/>
 	    </createTable>
 	</changeSet>
+
+	<changeSet author="ruhanga" id="1739449260463" >
+	    <!-- Indexes for orders table -->
+	    <createIndex tableName="orders" indexName="idx_orders_voided">
+	        <column name="voided"/>
+	    </createIndex>
+	    <createIndex tableName="orders" indexName="idx_orders_date_created">
+	        <column name="date_created"/>
+	    </createIndex>
+	    <createIndex tableName="orders" indexName="idx_orders_concept_uuid">
+	        <column name="concept_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="orders" indexName="idx_orders_encounter_uuid">
+	        <column name="encounter_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="orders" indexName="idx_orders_order_type_uuid">
+	        <column name="order_type_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="orders" indexName="idx_orders_date_stopped">
+	        <column name="date_stopped"/>
+	    </createIndex>
+
+	    <!-- Indexes for concepts table -->
+	    <createIndex tableName="concepts" indexName="idx_concepts_uuid">
+	        <column name="uuid"/>
+	    </createIndex>
+
+	    <!-- Indexes for encounters table -->
+	    <createIndex tableName="encounters" indexName="idx_encounters_encounter_uuid">
+	        <column name="encounter_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="encounters" indexName="idx_encounters_encounter_voided">
+	        <column name="encounter_voided"/>
+	    </createIndex>
+
+	    <!-- Indexes for locations table -->
+	    <createIndex tableName="locations" indexName="idx_locations_uuid">
+	        <column name="uuid"/>
+	    </createIndex>
+
+	    <!-- Indexes for patients table -->
+	    <createIndex tableName="patients" indexName="idx_patients_voided">
+	        <column name="person_voided"/>
+	    </createIndex>
+	    <createIndex tableName="patients" indexName="idx_patients_patient_uuid">
+	        <column name="patient_uuid"/>
+	    </createIndex>
+
+	    <!-- Indexes for visits table -->
+	    <createIndex tableName="visits" indexName="idx_visits_visit_uuid">
+	        <column name="visit_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_type">
+	        <column name="type"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_location">
+	        <column name="location"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_date_started">
+	        <column name="date_started"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_date_stopped">
+	        <column name="date_stopped"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_visit_type_uuid">
+	        <column name="visit_type_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="visits" indexName="idx_visits_visit_voided">
+	        <column name="visit_voided"/>
+	    </createIndex>
+
+	    <!-- Indexes for observations table -->
+	    <createIndex tableName="observations" indexName="idx_observations_obs_voided">
+	        <column name="obs_voided"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_question_uuid">
+	        <column name="question_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_visit_uuid">
+	        <column name="visit_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_answer_coded">
+	        <column name="answer_coded"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_encounter_uuid">
+	        <column name="encounter_uuid"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_encounter_type">
+	        <column name="encounter_type"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_answer_text">
+	        <column name="answer_text"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_answer_numeric">
+	        <column name="answer_numeric"/>
+	    </createIndex>
+	    <createIndex tableName="observations" indexName="idx_observations_answer_datetime">
+	        <column name="answer_datetime"/>
+	    </createIndex>
+	</changeSet>
 </databaseChangeLog>
