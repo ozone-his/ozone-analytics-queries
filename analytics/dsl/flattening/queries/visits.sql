@@ -5,33 +5,12 @@ SELECT
     visit.date_started AS date_started,
     visit.date_stopped AS date_stopped,
     visit_type.name AS type,
-    (
-        SELECT LISTAGG(
-            CONCAT_WS(
-                ': ',
-                a.attribute_type_name,
-                a.attribute_value
-            ), ' / '
-        )
-        FROM (
-            SELECT
-                va.visit_id,
-                vat.name AS attribute_type_name,
-                CASE
-                    WHEN vat.datatype = 'org.openmrs.customdatatype.datatype.ConceptDatatype' THEN cn.name
-                    ELSE va.value_reference
-                END AS attribute_value
-            FROM
-                visit_attribute va
-                LEFT JOIN visit_attribute_type vat ON va.attribute_type_id = vat.visit_attribute_type_id
-                LEFT JOIN concept c ON va.value_reference = c.uuid
-                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
-            WHERE
-                va.visit_id = visit.visit_id
-                AND cn.locale_preferred = '1'
-                AND cn.locale = 'en'
-                AND cn.voided = '0'
-        ) AS a
+    LISTAGG(DISTINCT
+        CONCAT_WS(
+            ': ',
+            a.attribute_type_name,
+            a.attribute_value
+        ), ' / '
     ) AS visit_attributes,
     person.gender AS patient_gender,
     person.birthdate AS patient_birthdate,
@@ -51,6 +30,24 @@ FROM
     LEFT JOIN person person ON visit.patient_id = person.person_id
     LEFT JOIN person creator ON visit.creator = creator.person_id
     LEFT JOIN location location ON visit.location_id = location.location_id
+    LEFT JOIN (
+        SELECT DISTINCT
+            va.visit_id,
+            vat.name AS attribute_type_name,
+            CASE
+                WHEN vat.datatype = 'org.openmrs.customdatatype.datatype.ConceptDatatype' THEN cn.name
+                ELSE va.value_reference
+            END AS attribute_value
+        FROM
+            visit_attribute va
+            LEFT JOIN visit_attribute_type vat ON va.attribute_type_id = vat.visit_attribute_type_id
+            LEFT JOIN concept c ON va.value_reference = c.uuid
+            LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
+        WHERE
+            cn.locale_preferred = '1'
+            AND cn.locale = 'en'
+            AND cn.voided = '0'
+    ) a ON a.visit_id = visit.visit_id
 GROUP BY
     visit.visit_id,
     visit.voided,
