@@ -14,7 +14,7 @@ SELECT
             ), ' / '
         )
         FROM (
-            SELECT
+            SELECT DISTINCT
                 va.visit_id,
                 vat.name AS attribute_type_name,
                 CASE
@@ -25,13 +25,10 @@ SELECT
                 visit_attribute va
                 LEFT JOIN visit_attribute_type vat ON va.attribute_type_id = vat.visit_attribute_type_id
                 LEFT JOIN concept c ON va.value_reference = c.uuid
-                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
+                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id AND cn.locale_preferred = true AND cn.locale = 'en' AND cn.voided = false
             WHERE
                 va.visit_id = visit.visit_id
-                AND cn.locale_preferred = true
-                AND cn.locale = 'en'
-                AND cn.voided = false
-        ) AS a
+        ) AS a WHERE a.attribute_value IS NOT NULL
     ) AS visit_attributes,
     person.gender AS patient_gender,
     person.birthdate AS patient_birthdate,
