@@ -54,13 +54,10 @@ SELECT
                 person_attribute pa
                 LEFT JOIN person_attribute_type pa_type ON pa.person_attribute_type_id = pa_type.person_attribute_type_id
                 LEFT JOIN concept c ON pa.`value` = c.uuid
-                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id
+                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id AND cn.locale_preferred = true AND cn.locale = 'en' AND cn.voided = false
             WHERE
-                pa.person_id = patient.patient_id
-                AND cn.locale_preferred = true
-                AND cn.locale = 'en'
-                AND cn.voided = false
-        ) AS a
+                pa.person_id = patient.patient_id AND pa.voided = false
+        ) AS a WHERE a.attribute_value IS NOT NULL
     ) AS attributes,
     person.dead AS dead,
     person.death_date AS death_date,
