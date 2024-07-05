@@ -492,4 +492,16 @@
 	        <column name="answer_datetime"/>
 	    </createIndex>
 	</changeSet>
+
+	<changeSet author="ruhanga" id="1720167101123" >
+	    <!-- Indexes for orders table -->
+	    <createIndex tableName="orders" indexName="idx_orders_duration_unit_uuid">
+	        <column name="duration_unit_uuid"/>
+	    </createIndex>
+
+	    <!-- Indexes for encounters table -->
+	    <createIndex tableName="encounters" indexName="idx_encounters_encounter_datetime">
+	        <column name="encounter_datetime"/>
+	    </createIndex>
+	</changeSet>
 </databaseChangeLog>
