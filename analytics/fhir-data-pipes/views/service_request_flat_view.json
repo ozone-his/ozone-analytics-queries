@@ -1,0 +1,52 @@
+{
+  "resourceType": "http://hl7.org/fhir/uv/sql-on-fhir/StructureDefinition/ViewDefinition",
+  "text": "SQL-on-FHIR view for ServiceRequest_flat.sql",
+  "fhirVersion": [
+    "4.0"
+  ],
+  "select": [
+    {
+      "column": [
+        { "path": "getResourceKey()", "name": "id" },
+        { "path": "subject.getReferenceKey(Patient)", "name": "patient_id" },
+        { "path": "encounter.getReferenceKey(Encounter)", "name": "encounter_id" },
+        { "path": "status", "name": "status" },
+        { "path": "intent", "name": "intent" },
+        { "path": "priority", "name": "priority" },
+        { "path": "authoredOn", "name": "authored_on", "type": "dateTime" },
+        { "path": "requester.practitioner.getReferenceKey(Practitioner)", "name": "requester_practitioner_id" },
+        { "path": "requester.organization.getReferenceKey(Organization)", "name": "requester_org_id" },
+        { "path": "performer.practitioner.getReferenceKey(Practitioner)", "name": "performer_practitioner_id" },
+        { "path": "performer.organization.getReferenceKey(Organization)", "name": "performer_org_id" }
+      ]
+    },
+    {
+      "forEachOrNull": "code.coding",
+      "column": [
+        { "path": "code", "name": "code_code" },
+        { "path": "system", "name": "code_sys" },
+        { "path": "display", "name": "code_display" }
+      ]
+    },
+    {
+      "forEachOrNull": "category",
+      "select": [
+        {
+          "forEachOrNull": "coding",
+          "column": [
+            { "path": "code", "name": "category_code" },
+            { "path": "system", "name": "category_sys" },
+            { "path": "display", "name": "category_display" }
+          ]
+        }
+      ]
+    }
+  ],
+  "name": "service_request_flat",
+  "status": "draft",
+  "resource": "ServiceRequest"
+}
+
+
+
+
