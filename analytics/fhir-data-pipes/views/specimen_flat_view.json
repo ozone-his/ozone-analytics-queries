@@ -1,0 +1,33 @@
+{
+  "resourceType": "http://hl7.org/fhir/uv/sql-on-fhir/StructureDefinition/ViewDefinition",
+  "text": "SQL-on-FHIR view for Specimen_flat.sql",
+  "fhirVersion": [
+    "4.0"
+  ],
+  "select": [
+    {
+      "column": [
+        { "path": "getResourceKey()", "name": "id" },
+        { "path": "subject.getReferenceKey(Patient)", "name": "patient_id" },
+        { "path": "status", "name": "status" },
+        { "path": "collection.collectedDateTime", "name": "collected_datetime", "type": "dateTime" },
+        { "path": "receivedTime", "name": "received_time", "type": "dateTime" }
+      ]
+    },
+    {
+      "forEachOrNull": "type.coding",
+      "column": [
+        { "path": "code", "name": "type_code" },
+        { "path": "system", "name": "type_sys" },
+        { "path": "display", "name": "type_display" }
+      ]
+    }
+  ],
+  "name": "specimen_flat",
+  "status": "draft",
+  "resource": "Specimen"
+}
+
+
+
+
