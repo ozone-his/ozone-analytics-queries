@@ -1,6 +1,7 @@
 SELECT
     provider.provider_id AS provider_id,
     provider.person_id AS person_id,
+    person.uuid AS person_uuid,
     provider.identifier AS identifier,
     provider.name AS name,
     person_name.given_name AS given_name,
@@ -32,10 +33,11 @@ SELECT
 FROM
     provider
 LEFT JOIN person ON provider.person_id = person.person_id
-LEFT JOIN person_name ON person.person_id = person_name.person_id AND person_name.preferred = true AND person_name.voided = false
+LEFT JOIN person_name ON person.person_id = person_name.person_id AND person_name.voided = false
 GROUP BY
     provider.provider_id,
     provider.person_id,
+    person.uuid,
     provider.identifier,
     provider.name,
     person_name.given_name,

@@ -11,6 +11,7 @@
 				<constraints nullable="false" primaryKey="true" primaryKeyName="providers_pkey" />
 			</column>
 			<column name="person_id" type="BIGINT" />
+			<column name="person_uuid" type="VARCHAR" />
 			<column name="identifier" type="VARCHAR" />
 			<column name="name" type="VARCHAR" />
 			<column name="given_name" type="VARCHAR" />

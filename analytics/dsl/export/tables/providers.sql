@@ -1,6 +1,7 @@
 CREATE TABLE providers (
     provider_id BIGINT,
     person_id BIGINT,
+    person_uuid VARCHAR,
     identifier VARCHAR,
     name VARCHAR,
     given_name VARCHAR,
