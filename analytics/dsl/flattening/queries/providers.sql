@@ -3,6 +3,7 @@ SELECT
     provider.person_id AS person_id,
     person.uuid AS person_uuid,
     provider.identifier AS identifier,
+    users.username AS username,
     provider.name AS name,
     person_name.given_name AS given_name,
     person_name.middle_name AS middle_name,
@@ -34,11 +35,13 @@ FROM
     provider
 LEFT JOIN person ON provider.person_id = person.person_id
 LEFT JOIN person_name ON person.person_id = person_name.person_id AND person_name.voided = false
+LEFT JOIN users ON person.person_id = users.person_id AND users.retired = false
 GROUP BY
     provider.provider_id,
     provider.person_id,
     person.uuid,
     provider.identifier,
+    users.username,
     provider.name,
     person_name.given_name,
     person_name.middle_name,
