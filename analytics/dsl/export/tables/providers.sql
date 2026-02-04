@@ -1,0 +1,23 @@
+CREATE TABLE providers (
+    provider_id BIGINT,
+    person_id BIGINT,
+    identifier VARCHAR,
+    username VARCHAR,
+    name VARCHAR,
+    given_name VARCHAR,
+    middle_name VARCHAR,
+    family_name VARCHAR,
+    gender VARCHAR,
+    birthdate DATE,
+    roles VARCHAR,
+    retired BOOLEAN,
+    retired_by BIGINT,
+    date_retired TIMESTAMP,
+    retire_reason VARCHAR,
+    date_created TIMESTAMP,
+    creator BIGINT,
+    changed_by BIGINT,
+    date_changed TIMESTAMP,
+    person_uuid VARCHAR,
+    provider_uuid VARCHAR
+)
