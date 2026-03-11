@@ -44,6 +44,10 @@
         {
           "path": "value.ofType(Quantity).code",
           "name": "val_quantity_code"
+        },
+        {
+          "path": "value.ofType(string)",
+          "name": "val_string"
         }
       ]
     },
