@@ -5,7 +5,12 @@ SELECT D.id AS id, D.subject.patientId AS patient_id,
   D.status, DP.PractitionerId AS practitioner_id,
   DCatC.system AS category_sys, DCatC.code AS category_code,
   DConC.system AS conclusion_sys, DConC.code AS conclusion_code,
-  D.conclusion
+  D.conclusion,
+  regexp_extract(
+    element_at(filter(D.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
+    'Organization/(.*)',
+    1
+  ) AS facility_org_id
 FROM DiagnosticReport AS D LATERAL VIEW OUTER explode(D.result) AS DR
   LATERAL VIEW OUTER explode(D.code.coding) AS DCC
   LATERAL VIEW OUTER explode(D.performer) AS DP

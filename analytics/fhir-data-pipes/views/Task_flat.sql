@@ -9,7 +9,12 @@ SELECT T.id AS id,
   T.requester.practitionerId AS requester_practitioner_id,
   T.requester.organizationId AS requester_org_id,
   T.authoredOn AS authored_on,
-  T.lastModified AS last_modified
+  T.lastModified AS last_modified,
+  regexp_extract(
+    element_at(filter(T.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
+    'Organization/(.*)',
+    1
+  ) AS facility_org_id
 FROM Task AS T
 ;
 

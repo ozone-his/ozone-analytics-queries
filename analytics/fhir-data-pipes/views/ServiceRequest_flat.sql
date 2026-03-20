@@ -13,7 +13,12 @@ SELECT SR.id AS id,
   SR.requester.practitionerId AS requester_practitioner_id,
   SR.requester.organizationId AS requester_org_id,
   SR.performer.practitionerId AS performer_practitioner_id,
-  SR.performer.organizationId AS performer_org_id
+  SR.performer.organizationId AS performer_org_id,
+  regexp_extract(
+    element_at(filter(SR.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
+    'Organization/(.*)',
+    1
+  ) AS facility_org_id
 FROM ServiceRequest AS SR
   LATERAL VIEW OUTER explode(SR.code.coding) AS SRC
   LATERAL VIEW OUTER explode(SR.category) AS SRCA
