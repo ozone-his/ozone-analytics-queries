@@ -19,6 +19,13 @@
         { "path": "authoredOn", "name": "authored_on", "type": "dateTime" },
         { "path": "lastModified", "name": "last_modified", "type": "dateTime" }
       ]
+    },
+    {
+      "forEachOrNull": "identifier.where(system = 'http://openelis-global.org/facility_id')",
+      "column": [
+        { "path": "value", "name": "facility_name" },
+        { "path": "assigner.getReferenceKey(Organization)", "name": "facility_org_id" }
+      ]
     }
   ],
   "name": "task_flat",

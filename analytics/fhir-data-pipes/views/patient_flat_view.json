@@ -71,17 +71,11 @@
       ]
     },
     {
+      "forEachOrNull": "identifier.where(system = 'http://openelis-global.org/facility_id')",
       "column": [
-        {
-          "path": "value",
-          "name": "identifier_value"
-        },
-        {
-          "path": "system",
-          "name": "identifier_sys"
-        }
-      ],
-      "forEachOrNull": "identifier"
+        { "path": "value", "name": "facility_name" },
+        { "path": "assigner.getReferenceKey(Organization)", "name": "facility_org_id" }
+      ]
     }
   ],
   "name": "patient_flat",

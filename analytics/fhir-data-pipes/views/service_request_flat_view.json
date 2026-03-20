@@ -40,6 +40,13 @@
           ]
         }
       ]
+    },
+    {
+      "forEachOrNull": "identifier.where(system = 'http://openelis-global.org/facility_id')",
+      "column": [
+        { "path": "value", "name": "facility_name" },
+        { "path": "assigner.getReferenceKey(Organization)", "name": "facility_org_id" }
+      ]
     }
   ],
   "name": "service_request_flat",
