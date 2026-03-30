@@ -4,7 +4,7 @@ SELECT
     location.name AS location,
     obs.obs_datetime AS obs_date_time,
     concept_concept_name.name AS question_label,
-    concept_concept_name.name AS question_mapping,
+    concept_concept_name.uuid AS question_mapping,
     value_concept_name.name AS answer_coded,
     obs.value_datetime AS answer_datetime,
     obs.value_drug AS answer_drug,
