@@ -7,11 +7,8 @@ SELECT O.id AS id, O.subject.patientId AS patient_id,
   O.effective.dateTime AS obs_date,
   OCatC.`system` AS category_sys,
   OCatC.code AS category_code,
-  regexp_extract(
-    element_at(filter(O.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
-    'Organization/(.*)',
-    1
-  ) AS facility_org_id
+  element_at(filter(O.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).value AS facility_id,
+  element_at(filter(O.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.display AS facility_name
 FROM Observation AS O LATERAL VIEW OUTER explode(code.coding) AS OCC
   LATERAL VIEW OUTER explode(O.value.codeableConcept.coding) AS OVCC
   LATERAL VIEW OUTER explode(O.category) AS OCat

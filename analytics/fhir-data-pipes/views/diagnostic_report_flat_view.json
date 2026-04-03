@@ -95,11 +95,11 @@
       "column": [
         {
           "path": "value",
-          "name": "facility_name"
+          "name": "facility_id"
         },
         {
-          "path": "assigner.getReferenceKey(Organization)",
-          "name": "facility_org_id"
+          "path": "assigner.display",
+          "name": "facility_name"
         }
       ]
     }
