@@ -4,11 +4,8 @@ SELECT P.id AS id, P.active, PN.family, PNG AS given, P.gender,
   YEAR(current_date()) - YEAR(P.birthDate) AS age,
   PA.country, PG.practitionerId AS practitioner_id,
   P.managingOrganization.organizationId AS organization_id,
-  regexp_extract(
-    element_at(filter(P.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
-    'Organization/(.*)',
-    1
-  ) AS facility_org_id
+  element_at(filter(P.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).value AS facility_id,
+  element_at(filter(P.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.display AS facility_name
 FROM Patient AS P LATERAL VIEW OUTER explode(name) AS PN
   LATERAL VIEW OUTER explode(PN.given) AS PNG
   LATERAL VIEW OUTER explode(P.address) AS PA

@@ -6,11 +6,8 @@ SELECT S.id AS id,
   STC.`system` AS type_sys,
   S.collection.collectedDateTime AS collected_datetime,
   S.receivedTime AS received_time,
-  regexp_extract(
-    element_at(filter(S.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.reference,
-    'Organization/(.*)',
-    1
-  ) AS facility_org_id
+  element_at(filter(S.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).value AS facility_id,
+  element_at(filter(S.identifier, x -> x.system = 'http://openelis-global.org/facility_id'), 1).assigner.display AS facility_name
 FROM Specimen AS S
   LATERAL VIEW OUTER explode(S.type.coding) AS STC
 ;
