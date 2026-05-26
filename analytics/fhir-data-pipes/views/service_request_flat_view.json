@@ -10,6 +10,7 @@
         { "path": "getResourceKey()", "name": "id" },
         { "path": "subject.getReferenceKey(Patient)", "name": "patient_id" },
         { "path": "encounter.getReferenceKey(Encounter)", "name": "encounter_id" },
+        { "path": "requisition.value", "name": "requisition_id" },
         { "path": "status", "name": "status" },
         { "path": "intent", "name": "intent" },
         { "path": "priority", "name": "priority" },
@@ -18,6 +19,12 @@
         { "path": "requester.organization.getReferenceKey(Organization)", "name": "requester_org_id" },
         { "path": "performer.practitioner.getReferenceKey(Practitioner)", "name": "performer_practitioner_id" },
         { "path": "performer.organization.getReferenceKey(Organization)", "name": "performer_org_id" }
+      ]
+    },
+    {
+      "forEachOrNull": "note",
+      "column": [
+        { "path": "text", "name": "note" }
       ]
     },
     {
