@@ -4,7 +4,19 @@ SELECT
     location.name AS location,
     obs.obs_datetime AS obs_date_time,
     concept_concept_name.name AS question_label,
-    concept_concept_name.uuid AS question_mapping,
+    (
+        SELECT LISTAGG(
+            CASE
+                WHEN concept_reference_source.name <> '' AND concept_reference_term.code <> ''
+                THEN CONCAT_WS(': ', concept_reference_source.name, concept_reference_term.code)
+            END,
+            ', '
+        )
+        FROM concept_reference_map
+        LEFT JOIN concept_reference_term ON concept_reference_map.concept_reference_term_id = concept_reference_term.concept_reference_term_id
+        LEFT JOIN concept_reference_source ON concept_reference_term.concept_source_id = concept_reference_source.concept_source_id
+        WHERE concept_reference_map.concept_id = obs.concept_id
+    ) AS question_mapping,
     value_concept_name.name AS answer_coded,
     obs.value_datetime AS answer_datetime,
     obs.value_drug AS answer_drug,
