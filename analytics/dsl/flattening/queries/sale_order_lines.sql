@@ -8,6 +8,7 @@ SELECT
     irp.name AS product_external_id,
     sol.product_uom_qty AS quantity,
     sol.price_unit AS unit_price,
+    cost_at_line.product_cost_price,
     sol.price_subtotal AS subtotal,
     sol.price_total AS total,
     sol.create_date AS line_creation_date,
@@ -29,3 +30,29 @@ LEFT JOIN
     res_partner rp ON so.partner_id = rp.id
 LEFT JOIN 
     ir_model_data irp ON (irp.model = 'product.product' AND irp.res_id = pp.id)
+LEFT JOIN (
+    SELECT
+        sale_order_line_id,
+        product_cost_price
+    FROM (
+        SELECT
+            sol_cost.id AS sale_order_line_id,
+            COALESCE(
+                CAST(REGEXP_EXTRACT(svl.description, 'to ([0-9]+([.][0-9]+)?)[)]', 1) AS NUMERIC),
+                svl.unit_cost
+            ) AS product_cost_price,
+            ROW_NUMBER() OVER (
+                PARTITION BY sol_cost.id
+                ORDER BY svl.create_date DESC, svl.id DESC
+            ) AS row_num
+        FROM
+            sale_order_line sol_cost
+        JOIN
+            stock_valuation_layer svl ON svl.product_id = sol_cost.product_id
+                AND svl.company_id = sol_cost.company_id
+                AND svl.create_date <= sol_cost.create_date
+        WHERE
+            sol_cost.product_id IS NOT NULL
+    ) ranked_costs
+    WHERE row_num = 1
+) cost_at_line ON cost_at_line.sale_order_line_id = sol.id

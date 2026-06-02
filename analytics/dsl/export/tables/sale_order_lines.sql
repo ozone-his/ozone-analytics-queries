@@ -8,6 +8,7 @@ CREATE TABLE sale_order_lines (
     `product_external_id` VARCHAR,
     `quantity` NUMERIC,
     `unit_price` NUMERIC,
+    `product_cost_price` NUMERIC,
     `subtotal` NUMERIC,
     `total` NUMERIC,
     `line_creation_date` TIMESTAMP,
