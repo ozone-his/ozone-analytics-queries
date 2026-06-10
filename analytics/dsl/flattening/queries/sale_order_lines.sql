@@ -8,7 +8,9 @@ SELECT
     irp.name AS product_external_id,
     sol.product_uom_qty AS quantity,
     sol.price_unit AS unit_price,
+    cost_at_line.unit_cost,
     sol.price_subtotal AS subtotal,
+    cost_at_line.unit_cost * sol.product_uom_qty AS line_cost,
     sol.price_total AS total,
     sol.create_date AS line_creation_date,
     sol.write_date AS line_last_modified_date,
@@ -16,9 +18,7 @@ SELECT
     `rp`.`ref` AS customer_uuid,
     rp.email AS customer_email,
     rp.phone AS customer_phone,
-    so.invoice_status AS invoicing_status,
-    cost_at_line.unit_cost,
-    cost_at_line.unit_cost * sol.product_uom_qty AS line_cost
+    so.invoice_status AS invoicing_status
 FROM 
     sale_order_line sol
 LEFT JOIN 
