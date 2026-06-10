@@ -3,6 +3,7 @@ CREATE TABLE `sale_order_line` (
     `order_id` INTEGER,
     `sequence` INTEGER,
     `product_id` INTEGER,
+    `company_id` INTEGER,
     `product_uom_qty` NUMERIC,
     `price_unit` NUMERIC,
     `price_subtotal` NUMERIC,
