@@ -17,7 +17,8 @@ SELECT
     rp.email AS customer_email,
     rp.phone AS customer_phone,
     so.invoice_status AS invoicing_status,
-    cost_at_line.product_cost_price
+    cost_at_line.unit_cost,
+    cost_at_line.unit_cost * sol.product_uom_qty AS line_cost
 FROM 
     sale_order_line sol
 LEFT JOIN 
@@ -33,14 +34,14 @@ LEFT JOIN
 LEFT JOIN (
     SELECT
         sale_order_line_id,
-        product_cost_price
+        unit_cost
     FROM (
         SELECT
             sol_cost.id AS sale_order_line_id,
             COALESCE(
                 CAST(REGEXP_EXTRACT(svl.description, 'to ([0-9]+([.][0-9]+)?)[)]', 1) AS NUMERIC),
                 svl.unit_cost
-            ) AS product_cost_price,
+            ) AS unit_cost,
             ROW_NUMBER() OVER (
                 PARTITION BY sol_cost.id
                 ORDER BY svl.create_date DESC, svl.id DESC

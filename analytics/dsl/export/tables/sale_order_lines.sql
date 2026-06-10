@@ -17,5 +17,6 @@ CREATE TABLE sale_order_lines (
     `customer_email` VARCHAR,
     `customer_phone` VARCHAR,
     `invoicing_status` VARCHAR,
-    `product_cost_price` NUMERIC
+    `unit_cost` NUMERIC,
+    `line_cost` NUMERIC
 )
