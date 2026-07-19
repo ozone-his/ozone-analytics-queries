@@ -1,1 +1,1 @@
-INSERT into locations SELECT t.*  from  analytics.analytics.locations t
+INSERT into locations SELECT t.*  from  {ANALYTICS_CATALOG}.analytics.locations t
