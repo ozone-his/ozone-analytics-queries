@@ -28,4 +28,4 @@ LEFT JOIN
 LEFT JOIN 
     res_partner rp ON so.partner_id = rp.id
 LEFT JOIN 
-    ir_model_data irp ON (irp.model = 'product.product' AND irp.res_id = pp.id)
+    ir_model_data irp ON (irp.`model` = 'product.product' AND irp.res_id = pp.id)
