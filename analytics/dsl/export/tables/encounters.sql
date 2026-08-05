@@ -1,23 +1,19 @@
--- GENERATED from the analytics `encounters` table by development/seed/
--- generate-export-tables.py. The export query does SELECT t.* from it, so the two
--- must match column for column. Do not edit by hand; re-run the generator.
-
 CREATE TABLE encounters (
-    encounter_id BIGINT,
+    encounter_id BIGINT NOT NULL,
     encounter_voided BOOLEAN,
-    location STRING,
+    location VARCHAR,
     encounter_datetime TIMESTAMP,
-    encounter_type STRING,
-    visit_type STRING,
+    encounter_type VARCHAR,
+    visit_type VARCHAR,
     visit_date_started TIMESTAMP,
     visit_date_stopped TIMESTAMP,
-    form_name STRING,
-    form_uuid STRING,
-    form_version STRING,
-    encounter_uuid STRING,
-    encounter_type_uuid STRING,
-    visit_uuid STRING,
-    patient_uuid STRING,
-    location_uuid STRING,
-    creator_uuid STRING
+    form_name VARCHAR,
+    form_uuid VARCHAR,
+    form_version VARCHAR,
+    encounter_uuid VARCHAR,
+    encounter_type_uuid VARCHAR,
+    visit_uuid VARCHAR,
+    patient_uuid VARCHAR,
+    location_uuid VARCHAR,
+    creator_uuid VARCHAR
 )
