@@ -12,5 +12,7 @@ CREATE TABLE `encounter_diagnoses` (
     `voided` BOOLEAN,
     `voided_by` BIGINT,
     `date_voided` TIMESTAMP,
-    `void_reason` VARCHAR
+    `void_reason` VARCHAR,
+    `location` VARCHAR,
+    `location_uuid` VARCHAR
 )

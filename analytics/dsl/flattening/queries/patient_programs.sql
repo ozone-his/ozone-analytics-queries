@@ -24,7 +24,9 @@ SELECT
     concept_concept_name.uuid AS concept_uuid,
     program.outcomes_concept_id AS program_outcomes_concept_id,
     outcomes_concept.name AS outcomes_concept_name,
-    outcomes_concept.uuid AS outcomes_concept_uuid
+    outcomes_concept.uuid AS outcomes_concept_uuid,
+    location.name AS location,
+    location.uuid AS location_uuid
 FROM
     patient_program
     LEFT JOIN program program ON patient_program.program_id = program.program_id
@@ -35,4 +37,5 @@ FROM
     LEFT JOIN concept_name concept_concept_name ON program.concept_id = concept_concept_name.concept_id
     AND concept_concept_name.locale_preferred = true
     AND concept_concept_name.locale = 'en'
+    LEFT JOIN location location ON patient_program.location_id = location.location_id
     

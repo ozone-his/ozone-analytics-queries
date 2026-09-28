@@ -17,5 +17,7 @@ CREATE TABLE `conditions` (
     `voided_by` BIGINT,
     `changed_by` BIGINT,
     `patient_id` BIGINT,
-    `end_date` TIMESTAMP
+    `end_date` TIMESTAMP,
+    `location` VARCHAR,
+    `location_uuid` VARCHAR
 )

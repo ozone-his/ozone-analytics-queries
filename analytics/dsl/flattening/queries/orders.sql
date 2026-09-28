@@ -54,7 +54,9 @@ SELECT
     quantity_unit.uuid AS quantity_unit_uuid,
     route.uuid AS route_uuid,
     duration_unit.uuid AS duration_unit_uuid,
-    concept_frequency.uuid AS frequency_uuid
+    concept_frequency.uuid AS frequency_uuid,
+    location.name AS location,
+    location.uuid AS location_uuid
 FROM
     orders
     LEFT JOIN person person ON person.person_id = orders.patient_id
@@ -89,3 +91,4 @@ FROM
     LEFT JOIN concept_name concept_frequency_name ON concept_frequency.concept_id = concept_frequency_name.concept_id AND concept_frequency_name.locale LIKE 'en' AND concept_frequency_name.voided = false AND concept_frequency_name.locale_preferred = true
 
     LEFT JOIN drug drug ON drug_order.drug_inventory_id = drug.drug_id
+    LEFT JOIN location location ON encounter.location_id = location.location_id

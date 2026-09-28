@@ -54,5 +54,7 @@ CREATE TABLE orders (
     quantity_unit_uuid STRING,
     route_uuid STRING,
     duration_unit_uuid STRING,
-    frequency_uuid STRING
+    frequency_uuid STRING,
+    location STRING,
+    location_uuid STRING
 )
