@@ -1,0 +1,83 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+						http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd
+						http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+	<changeSet author="kipchubett" id="1790580000000">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="appointments" columnName="location_uuid" />
+			</not>
+		</preConditions>
+		<addColumn tableName="appointments">
+			<column name="location" type="VARCHAR" />
+			<column name="location_uuid" type="VARCHAR" />
+		</addColumn>
+		<createIndex tableName="appointments" indexName="idx_appointments_location_uuid">
+			<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet author="kipchubett" id="1790580000001">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="patient_programs" columnName="location_uuid" />
+			</not>
+		</preConditions>
+		<addColumn tableName="patient_programs">
+			<column name="location" type="VARCHAR" />
+			<column name="location_uuid" type="VARCHAR" />
+		</addColumn>
+		<createIndex tableName="patient_programs" indexName="idx_patient_programs_location_uuid">
+			<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet author="kipchubett" id="1790580000002">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="orders" columnName="location_uuid" />
+			</not>
+		</preConditions>
+		<addColumn tableName="orders">
+			<column name="location" type="VARCHAR" />
+			<column name="location_uuid" type="VARCHAR" />
+		</addColumn>
+		<createIndex tableName="orders" indexName="idx_orders_location_uuid">
+			<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet author="kipchubett" id="1790580000003">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="encounter_diagnoses" columnName="location_uuid" />
+			</not>
+		</preConditions>
+		<addColumn tableName="encounter_diagnoses">
+			<column name="location" type="VARCHAR" />
+			<column name="location_uuid" type="VARCHAR" />
+		</addColumn>
+		<createIndex tableName="encounter_diagnoses" indexName="idx_encounter_diagnoses_location_uuid">
+			<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet author="kipchubett" id="1790580000004">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="conditions" columnName="location_uuid" />
+			</not>
+		</preConditions>
+		<addColumn tableName="conditions">
+			<column name="location" type="VARCHAR" />
+			<column name="location_uuid" type="VARCHAR" />
+		</addColumn>
+		<createIndex tableName="conditions" indexName="idx_conditions_location_uuid">
+			<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

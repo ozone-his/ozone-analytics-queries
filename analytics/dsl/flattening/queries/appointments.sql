@@ -36,9 +36,12 @@ SELECT
     appointment_service_type.voided AS appointment_service_type_voided,
     appointment_service_type.uuid AS appointment_service_type_uuid,
     patient_appointment_provider.provider_id AS patient_appointment_provider,
-    patient_appointment_provider.response AS patient_appointment_provider_response
+    patient_appointment_provider.response AS patient_appointment_provider_response,
+    location.name AS location,
+    location.uuid AS location_uuid
 FROM
     patient_appointment
     LEFT JOIN appointment_service appointment_service ON patient_appointment.appointment_service_id = appointment_service.appointment_service_id
     LEFT JOIN appointment_service_type appointment_service_type ON appointment_service_type.appointment_service_id = appointment_service.appointment_service_id
     LEFT JOIN patient_appointment_provider patient_appointment_provider ON patient_appointment_provider.patient_appointment_id = patient_appointment.patient_appointment_id
+    LEFT JOIN location location ON patient_appointment.location_id = location.location_id

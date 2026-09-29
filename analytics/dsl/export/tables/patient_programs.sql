@@ -24,5 +24,7 @@ CREATE TABLE `patient_programs` (
     `concept_uuid` VARCHAR,
     `program_outcomes_concept_id` BIGINT,
     `outcomes_concept_name` VARCHAR,
-    `outcomes_concept_uuid` VARCHAR
+    `outcomes_concept_uuid` VARCHAR,
+    `location` VARCHAR,
+    `location_uuid` VARCHAR
 )

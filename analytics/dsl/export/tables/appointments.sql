@@ -36,5 +36,7 @@ CREATE TABLE `appointments` (
     `appointment_service_type_voided` BOOLEAN,
     `appointment_service_type_uuid` VARCHAR,
     `patient_appointment_provider` BIGINT,
-    `patient_appointment_provider_response` VARCHAR
+    `patient_appointment_provider_response` VARCHAR,
+    `location` VARCHAR,
+    `location_uuid` VARCHAR
 )
