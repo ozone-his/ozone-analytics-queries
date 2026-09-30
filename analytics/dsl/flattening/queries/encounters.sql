@@ -1,4 +1,4 @@
-select
+select /*+ STATE_TTL('encounter_type' = '0', 'location' = '0', 'form' = '0', 'visit' = '0', 'person' = '0', 'visit_type' = '0', 'creator' = '0') */
     encounter.encounter_id AS encounter_id,
     encounter.voided AS encounter_voided,
     location.name AS location,

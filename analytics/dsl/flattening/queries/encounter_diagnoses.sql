@@ -1,4 +1,4 @@
-select
+select /*+ STATE_TTL('encounter' = '0', 'location' = '0') */
     encounter_diagnosis.diagnosis_id AS diagnosis_id,
     encounter_diagnosis.diagnosis_coded AS diagnosis_coded,
     encounter_diagnosis.diagnosis_non_coded AS diagnosis_non_coded,

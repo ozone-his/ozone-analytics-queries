@@ -1,4 +1,7 @@
-SELECT
+-- State TTL: the global table.exec.state.ttl bounds how long a row keeps receiving changes from the
+-- tables joined to it. Every joined table is hinted to never expire, so a new row always finds the
+-- rows it references, however long ago those were last changed.
+SELECT /*+ STATE_TTL('person' = '0', 'creator' = '0', 'order_type' = '0', 'concept' = '0', 'concept_concept_name' = '0', 'concept_order_reason' = '0', 'concept_order_reason_name' = '0', 'care_setting' = '0', 'encounter' = '0', 'encounter_type' = '0', 'drug_order' = '0', 'dose_unit' = '0', 'concept_dose_unit_name' = '0', 'quantity_unit' = '0', 'concept_quantity_unit_name' = '0', 'route' = '0', 'concept_route_name' = '0', 'duration_unit' = '0', 'concept_duration_unit_name' = '0', 'frequency' = '0', 'concept_frequency' = '0', 'concept_frequency_name' = '0', 'drug' = '0', 'location' = '0') */
     orders.order_id AS order_id,
     person.uuid AS patient_uuid,
     order_type.name AS order_type_name,
@@ -66,7 +69,7 @@ FROM
     LEFT JOIN concept_name concept_concept_name ON orders.concept_id = concept_concept_name.concept_id AND concept_concept_name.locale LIKE 'en' AND concept_concept_name.voided = false AND concept_concept_name.locale_preferred = true
 
     LEFT JOIN concept concept_order_reason ON concept_order_reason.concept_id = orders.concept_id
-    LEFT JOIN concept_name concept_order_reason_name ON orders.order_reason = concept_order_reason_name.concept_id AND concept_concept_name.locale LIKE 'en' AND concept_concept_name.voided = false AND concept_concept_name.locale_preferred = true
+    LEFT JOIN concept_name concept_order_reason_name ON orders.order_reason = concept_order_reason_name.concept_id AND concept_order_reason_name.locale = 'en' AND concept_order_reason_name.voided = false AND concept_order_reason_name.locale_preferred = true
 
     LEFT JOIN care_setting care_setting ON orders.care_setting = care_setting.care_setting_id
     LEFT JOIN encounter encounter ON encounter.encounter_id = orders.encounter_id
