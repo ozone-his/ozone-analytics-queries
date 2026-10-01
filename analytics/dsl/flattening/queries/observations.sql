@@ -1,22 +1,14 @@
-SELECT
+-- State TTL: the global table.exec.state.ttl bounds how long an observation keeps receiving changes
+-- from the tables joined to it. Every joined table, and the question mappings, are hinted to never
+-- expire, so a new observation always finds its concept names, encounter, visit, location and people
+-- however long ago those were last changed.
+SELECT /*+ STATE_TTL('parent_obs' = '0', 'group_concept' = '0', 'value_concept_name' = '0', 'encounter' = '0', 'visit' = '0', 'encounter_type' = '0', 'visit_type' = '0', 'location' = '0', 'concept_concept_name' = '0', 'patient' = '0', 'creator' = '0', 'concept' = '0', 'concept_answer' = '0', 'mappings' = '0') */
     obs.obs_id AS obs_id,
     obs.voided AS obs_voided,
     location.name AS location,
     obs.obs_datetime AS obs_date_time,
     concept_concept_name.name AS question_label,
-    (
-        SELECT LISTAGG(
-            CASE
-                WHEN concept_reference_source.name <> '' AND concept_reference_term.code <> ''
-                THEN CONCAT_WS(': ', concept_reference_source.name, concept_reference_term.code)
-            END,
-            ', '
-        )
-        FROM concept_reference_map
-        LEFT JOIN concept_reference_term ON concept_reference_map.concept_reference_term_id = concept_reference_term.concept_reference_term_id
-        LEFT JOIN concept_reference_source ON concept_reference_term.concept_source_id = concept_reference_source.concept_source_id
-        WHERE concept_reference_map.concept_id = obs.concept_id
-    ) AS question_mapping,
+    mappings.question_mapping AS question_mapping,
     value_concept_name.name AS answer_coded,
     obs.value_datetime AS answer_datetime,
     obs.value_drug AS answer_drug,
@@ -61,3 +53,33 @@ FROM
     LEFT JOIN person creator ON obs.creator = creator.person_id
     LEFT JOIN concept concept ON obs.concept_id = concept.concept_id
     LEFT JOIN concept concept_answer ON obs.value_coded = concept_answer.concept_id
+    -- One row per question concept. Written as a join rather than a correlated subquery so that its
+    -- aggregate can carry a STATE_TTL hint, and nested one join per block so that STATE_TTL can name
+    -- each join's left side: mappings are reference data and must never expire.
+    LEFT JOIN (
+        SELECT /*+ STATE_TTL('mapping_rows' = '0') */
+            mapping_rows.concept_id,
+            LISTAGG(
+                CASE
+                    WHEN mapping_rows.source_name <> '' AND mapping_rows.code <> ''
+                    THEN CONCAT_WS(': ', mapping_rows.source_name, mapping_rows.code)
+                END,
+                ', '
+            ) AS question_mapping
+        FROM (
+            SELECT /*+ STATE_TTL('mapping_terms' = '0', 'concept_reference_source' = '0') */
+                mapping_terms.concept_id,
+                concept_reference_source.name AS source_name,
+                mapping_terms.code
+            FROM (
+                SELECT /*+ STATE_TTL('concept_reference_map' = '0', 'concept_reference_term' = '0') */
+                    concept_reference_map.concept_id,
+                    concept_reference_term.code,
+                    concept_reference_term.concept_source_id
+                FROM concept_reference_map
+                LEFT JOIN concept_reference_term ON concept_reference_map.concept_reference_term_id = concept_reference_term.concept_reference_term_id
+            ) mapping_terms
+            LEFT JOIN concept_reference_source ON mapping_terms.concept_source_id = concept_reference_source.concept_source_id
+        ) mapping_rows
+        GROUP BY mapping_rows.concept_id
+    ) mappings ON mappings.concept_id = obs.concept_id

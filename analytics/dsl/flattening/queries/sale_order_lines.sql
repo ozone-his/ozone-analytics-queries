@@ -1,4 +1,7 @@
-SELECT 
+-- State TTL: the global table.exec.state.ttl bounds how long a row keeps receiving changes from the
+-- tables joined to it. Every joined table is hinted to never expire, so a new row always finds the
+-- rows it references, however long ago those were last changed.
+SELECT /*+ STATE_TTL('so' = '0', 'pp' = '0', 'pt' = '0', 'rp' = '0', 'irp' = '0') */ 
     sol.id AS sale_order_line_id,
     so.name AS sale_order_name,
     sol.sequence,

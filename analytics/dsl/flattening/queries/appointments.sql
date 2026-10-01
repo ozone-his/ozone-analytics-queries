@@ -1,4 +1,7 @@
-SELECT
+-- State TTL: the global table.exec.state.ttl bounds how long a row keeps receiving changes from the
+-- tables joined to it. Every joined table is hinted to never expire, so a new row always finds the
+-- rows it references, however long ago those were last changed.
+SELECT /*+ STATE_TTL('appointment_service' = '0', 'appointment_service_type' = '0', 'patient_appointment_provider' = '0', 'location' = '0') */
     patient_appointment.patient_appointment_id AS patient_appointment_id,
     patient_appointment.patient_id AS patient_id,
     patient_appointment.appointment_number AS appointment_number,
@@ -42,6 +45,6 @@ SELECT
 FROM
     patient_appointment
     LEFT JOIN appointment_service appointment_service ON patient_appointment.appointment_service_id = appointment_service.appointment_service_id
-    LEFT JOIN appointment_service_type appointment_service_type ON appointment_service_type.appointment_service_id = appointment_service.appointment_service_id
+    LEFT JOIN appointment_service_type appointment_service_type ON patient_appointment.appointment_service_type_id = appointment_service_type.appointment_service_type_id
     LEFT JOIN patient_appointment_provider patient_appointment_provider ON patient_appointment_provider.patient_appointment_id = patient_appointment.patient_appointment_id
     LEFT JOIN location location ON patient_appointment.location_id = location.location_id

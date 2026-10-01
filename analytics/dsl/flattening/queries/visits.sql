@@ -1,35 +1,15 @@
-SELECT
+-- State TTL: the global table.exec.state.ttl bounds how long a visit keeps receiving changes from the
+-- tables joined to it. Every joined table, and the attribute list, is hinted to never expire, so a
+-- new visit always finds its visit type, patient, creator and location however long ago those
+-- were last changed.
+SELECT /*+ STATE_TTL('visit_type' = '0', 'person' = '0', 'creator' = '0', 'location' = '0', 'attrs' = '0') */
     visit.visit_id AS visit_id,
     visit.voided AS visit_voided,
     location.name AS location,
     visit.date_started AS date_started,
     visit.date_stopped AS date_stopped,
     visit_type.name AS type,
-    (
-        SELECT LISTAGG(
-            CONCAT_WS(
-                ': ',
-                a.attribute_type_name,
-                a.attribute_value
-            ), ' / '
-        )
-        FROM (
-            SELECT DISTINCT
-                va.visit_id,
-                vat.name AS attribute_type_name,
-                CASE
-                    WHEN vat.datatype = 'org.openmrs.customdatatype.datatype.ConceptDatatype' THEN cn.name
-                    ELSE va.value_reference
-                END AS attribute_value
-            FROM
-                visit_attribute va
-                LEFT JOIN visit_attribute_type vat ON va.attribute_type_id = vat.visit_attribute_type_id
-                LEFT JOIN concept c ON va.value_reference = c.uuid
-                LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id AND cn.locale_preferred = true AND cn.locale = 'en' AND cn.voided = false
-            WHERE
-                va.visit_id = visit.visit_id
-        ) AS a WHERE a.attribute_value IS NOT NULL
-    ) AS visit_attributes,
+    attrs.visit_attributes AS visit_attributes,
     person.gender AS patient_gender,
     person.birthdate AS patient_birthdate,
     person.birthdate_estimated AS patient_birthdate_estimated,
@@ -48,21 +28,33 @@ FROM
     LEFT JOIN person person ON visit.patient_id = person.person_id
     LEFT JOIN person creator ON visit.creator = creator.person_id
     LEFT JOIN location location ON visit.location_id = location.location_id
-GROUP BY
-    visit.visit_id,
-    visit.voided,
-    location.name,
-    visit.date_started,
-    visit.date_stopped,
-    visit_type.name,
-    person.gender,
-    person.birthdate,
-    person.birthdate_estimated,
-    person.dead,
-    person.death_date,
-    person.cause_of_death,
-    visit.uuid,
-    visit_type.uuid,
-    location.uuid,
-    person.uuid,
-    creator.uuid
+    -- One row per visit. Written as a join rather than a correlated subquery so that its aggregates
+    -- can carry a STATE_TTL hint: Flink rewrites a correlated subquery into operators that no hint
+    -- reaches, and an expired list would restart from its next attribute alone.
+    LEFT JOIN (
+        SELECT /*+ STATE_TTL('a' = '0') */
+            a.visit_id,
+            LISTAGG(CONCAT_WS(': ', a.attribute_type_name, a.attribute_value), ' / ') AS visit_attributes
+        FROM (
+            SELECT /*+ STATE_TTL('attribute_rows' = '0') */ DISTINCT
+                attribute_rows.visit_id,
+                attribute_rows.attribute_type_name,
+                attribute_rows.attribute_value
+            FROM (
+                SELECT /*+ STATE_TTL('va' = '0', 'vat' = '0', 'c' = '0', 'cn' = '0') */
+                    va.visit_id,
+                    vat.name AS attribute_type_name,
+                    CASE
+                        WHEN vat.datatype = 'org.openmrs.customdatatype.datatype.ConceptDatatype' THEN cn.name
+                        ELSE va.value_reference
+                    END AS attribute_value
+                FROM
+                    visit_attribute va
+                    LEFT JOIN visit_attribute_type vat ON va.attribute_type_id = vat.visit_attribute_type_id
+                    LEFT JOIN concept c ON va.value_reference = c.uuid
+                    LEFT JOIN concept_name cn ON c.concept_id = cn.concept_id AND cn.locale_preferred = true AND cn.locale = 'en' AND cn.voided = false
+            ) attribute_rows
+        ) a
+        WHERE a.attribute_value IS NOT NULL
+        GROUP BY a.visit_id
+    ) attrs ON attrs.visit_id = visit.visit_id

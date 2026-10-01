@@ -1,4 +1,4 @@
-select
+select /*+ STATE_TTL('encounter' = '0', 'location' = '0') */
   conditions.`condition_id` AS `condition_id`,
   conditions.`additional_detail` AS `additional_detail`,
   conditions.`previous_version` AS `previous_version`,
