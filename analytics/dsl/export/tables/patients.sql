@@ -36,5 +36,7 @@ CREATE TABLE patients (
     creator BIGINT,
     date_created TIMESTAMP,
     person_voided BOOLEAN,
-    person_void_reason VARCHAR
+    person_void_reason VARCHAR,
+    location VARCHAR,
+    location_uuid VARCHAR
 )
