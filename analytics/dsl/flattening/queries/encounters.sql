@@ -19,9 +19,10 @@ select /*+ STATE_TTL('encounter_type' = '0', 'location' = '0', 'form' = '0', 'vi
 from
     encounter
     LEFT JOIN encounter_type encounter_type ON encounter.encounter_type = encounter_type.encounter_type_id
-    LEFT JOIN location location ON encounter.location_id = location.location_id
     LEFT JOIN form form ON encounter.form_id = form.form_id
     LEFT JOIN visit visit ON encounter.visit_id = visit.visit_id
+    -- An encounter with no location of its own takes its visit's.
+    LEFT JOIN location location ON COALESCE(encounter.location_id, visit.location_id) = location.location_id
     LEFT JOIN person person ON encounter.patient_id = person.person_id
     LEFT JOIN visit_type visit_type ON visit.visit_type_id = visit_type.visit_type_id
     LEFT JOIN person creator ON encounter.creator = creator.person_id
