@@ -6,7 +6,7 @@ SELECT /*+ STATE_TTL('appointment_service' = '0', 'appointment_service_type' = '
     patient_appointment.patient_id AS patient_id,
     patient_appointment.appointment_number AS appointment_number,
     patient_appointment.start_date_time AS start_date_time,
-    patient_appointment.location_id AS location_id,
+    location.location_id AS location_id,
     patient_appointment.end_date_time AS end_date_time,
     patient_appointment.appointment_service_id AS appointment_service_id,
     patient_appointment.appointment_service_type_id AS appointment_service_type_id,
@@ -28,8 +28,9 @@ SELECT /*+ STATE_TTL('appointment_service' = '0', 'appointment_service_type' = '
     appointment_service.voided AS appointment_service_voided,
     appointment_service.uuid AS appointment_service_uuid,
     appointment_service.color AS appointment_service_color,
-    appointment_service.start_time AS appointment_service_start_time,
-    appointment_service.end_time AS appointment_service_end_time,
+    -- A time of day in the source; the analytics column is a TIMESTAMP, so it reads as 1970-01-01 plus the time.
+    CAST(appointment_service.start_time AS TIMESTAMP) AS appointment_service_start_time,
+    CAST(appointment_service.end_time AS TIMESTAMP) AS appointment_service_end_time,
     appointment_service.speciality_id AS appointment_service_speciality_id,
     appointment_service.max_appointments_limit AS appointment_service_max_appointments_limit,
     appointment_service.duration_mins AS appointment_service_duration_mins,
@@ -47,4 +48,5 @@ FROM
     LEFT JOIN appointment_service appointment_service ON patient_appointment.appointment_service_id = appointment_service.appointment_service_id
     LEFT JOIN appointment_service_type appointment_service_type ON patient_appointment.appointment_service_type_id = appointment_service_type.appointment_service_type_id
     LEFT JOIN patient_appointment_provider patient_appointment_provider ON patient_appointment_provider.patient_appointment_id = patient_appointment.patient_appointment_id
-    LEFT JOIN location location ON patient_appointment.location_id = location.location_id
+    -- An appointment with no location of its own takes its service's.
+    LEFT JOIN location location ON COALESCE(patient_appointment.location_id, appointment_service.location_id) = location.location_id

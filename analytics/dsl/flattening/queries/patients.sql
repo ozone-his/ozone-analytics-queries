@@ -5,7 +5,8 @@
 -- Flink only lets STATE_TTL reach a join's left side when that side is a named table or subquery,
 -- not the result of an earlier join in the same query block. So each join below sits in its own
 -- block, read from the innermost outwards: patient + person, + name, + address, + identifiers,
--- + location, + attributes. The lists are joins rather than correlated subqueries for the same reason.
+-- + first visit, + location, + attributes. The lists are joins rather than correlated subqueries
+-- for the same reason.
 --
 -- location is where the patient was registered: the location of their preferred identifier, or of
 -- any other current identifier when the preferred one has none. It is picked inside the identifier
@@ -57,83 +58,130 @@ FROM (
         location.name AS location,
         location.uuid AS location_uuid
     FROM (
-        SELECT /*+ STATE_TTL('with_address' = '0', 'ids' = '0') */
-            with_address.*,
-            ids.identifiers,
-            ids.registration_location_id
+        SELECT /*+ STATE_TTL('with_ids' = '0', 'first_visit' = '0') */
+            with_ids.*,
+            COALESCE(with_ids.identifier_location_id, first_visit.location_id) AS registration_location_id
         FROM (
-            SELECT /*+ STATE_TTL('with_name' = '0', 'person_address' = '0') */
-                with_name.*,
-                person_address.city_village AS address_city,
-                person_address.county_district AS address_county_district,
-                person_address.state_province AS address_state_province,
-                person_address.country AS address_country,
-                person_address.address1 AS address_1,
-                person_address.address2 AS address_2,
-                person_address.address3 AS address_3,
-                person_address.address4 AS address_4,
-                person_address.address5 AS address_5,
-                person_address.address6 AS address_6,
-                person_address.address7 AS address_7,
-                person_address.address8 AS address_8,
-                person_address.address9 AS address_9,
-                person_address.address10 AS address_10,
-                person_address.address11 AS address_11,
-                person_address.address12 AS address_12,
-                person_address.address13 AS address_13,
-                person_address.address14 AS address_14,
-                person_address.address15 AS address_15,
-                person_address.latitude AS address_latitude,
-                person_address.longitude AS address_longitude
+            SELECT /*+ STATE_TTL('with_address' = '0', 'ids' = '0') */
+                with_address.*,
+                ids.identifiers,
+                ids.identifier_location_id
             FROM (
-                SELECT /*+ STATE_TTL('with_person' = '0', 'person_name' = '0') */
-                    with_person.*,
-                    person_name.given_name,
-                    person_name.middle_name,
-                    person_name.family_name
+                SELECT /*+ STATE_TTL('with_name' = '0', 'person_address' = '0') */
+                    with_name.*,
+                    person_address.city_village AS address_city,
+                    person_address.county_district AS address_county_district,
+                    person_address.state_province AS address_state_province,
+                    person_address.country AS address_country,
+                    person_address.address1 AS address_1,
+                    person_address.address2 AS address_2,
+                    person_address.address3 AS address_3,
+                    person_address.address4 AS address_4,
+                    person_address.address5 AS address_5,
+                    person_address.address6 AS address_6,
+                    person_address.address7 AS address_7,
+                    person_address.address8 AS address_8,
+                    person_address.address9 AS address_9,
+                    person_address.address10 AS address_10,
+                    person_address.address11 AS address_11,
+                    person_address.address12 AS address_12,
+                    person_address.address13 AS address_13,
+                    person_address.address14 AS address_14,
+                    person_address.address15 AS address_15,
+                    person_address.latitude AS address_latitude,
+                    person_address.longitude AS address_longitude
                 FROM (
-                    SELECT /*+ STATE_TTL('patient' = '0', 'person' = '0') */
-                        patient.patient_id AS patient_id,
-                        person.person_id AS person_id,
-                        person.gender AS gender,
-                        person.birthdate AS birthdate,
-                        person.birthdate_estimated AS birthdate_estimated,
-                        person.uuid AS patient_uuid,
-                        person.dead AS dead,
-                        person.death_date AS death_date,
-                        person.cause_of_death AS cause_of_death,
-                        person.creator AS creator,
-                        person.date_created AS date_created,
-                        person.voided AS person_voided,
-                        person.void_reason AS person_void_reason
-                    FROM patient
-                    LEFT JOIN person ON patient.patient_id = person.person_id
-                ) with_person
-                LEFT JOIN person_name ON with_person.person_id = person_name.person_id AND person_name.preferred = true AND person_name.voided = false
-            ) with_name
-            LEFT JOIN person_address ON with_name.person_id = person_address.person_id AND person_address.preferred = true AND person_address.voided = false
-        ) with_address
+                    SELECT /*+ STATE_TTL('with_person' = '0', 'person_name' = '0') */
+                        with_person.*,
+                        person_name.given_name,
+                        person_name.middle_name,
+                        person_name.family_name
+                    FROM (
+                        SELECT /*+ STATE_TTL('patient' = '0', 'person' = '0') */
+                            patient.patient_id AS patient_id,
+                            person.person_id AS person_id,
+                            person.gender AS gender,
+                            person.birthdate AS birthdate,
+                            person.birthdate_estimated AS birthdate_estimated,
+                            person.uuid AS patient_uuid,
+                            person.dead AS dead,
+                            person.death_date AS death_date,
+                            person.cause_of_death AS cause_of_death,
+                            person.creator AS creator,
+                            person.date_created AS date_created,
+                            person.voided AS person_voided,
+                            person.void_reason AS person_void_reason
+                        FROM patient
+                        LEFT JOIN person ON patient.patient_id = person.person_id
+                    ) with_person
+                    LEFT JOIN person_name ON with_person.person_id = person_name.person_id AND person_name.preferred = true AND person_name.voided = false
+                ) with_name
+                LEFT JOIN person_address ON with_name.person_id = person_address.person_id AND person_address.preferred = true AND person_address.voided = false
+            ) with_address
+            LEFT JOIN (
+                SELECT /*+ STATE_TTL('id_agg' = '0', 'coded_location' = '0') */
+                    id_agg.patient_id,
+                    id_agg.identifiers,
+                    COALESCE(id_agg.location_id, coded_location.location_id) AS identifier_location_id
+                FROM (
+                    SELECT /*+ STATE_TTL('identifier_rows' = '0') */
+                        identifier_rows.patient_id,
+                        LISTAGG(CONCAT_WS(': ', identifier_rows.identifier_type_name, identifier_rows.identifier), ', ') AS identifiers,
+                        COALESCE(
+                            MIN(CASE WHEN identifier_rows.preferred = true AND identifier_rows.voided = false THEN identifier_rows.location_id END),
+                            MIN(CASE WHEN identifier_rows.voided = false THEN identifier_rows.location_id END)
+                        ) AS location_id,
+                        COALESCE(
+                            MIN(CASE WHEN identifier_rows.preferred = true AND identifier_rows.voided = false THEN identifier_rows.location_code END),
+                            MIN(CASE WHEN identifier_rows.voided = false THEN identifier_rows.location_code END)
+                        ) AS location_code
+                    FROM (
+                        SELECT /*+ STATE_TTL('identifier' = '0', 'identifier_type' = '0') */
+                            identifier.patient_id,
+                            identifier_type.name AS identifier_type_name,
+                            identifier.identifier,
+                            identifier.preferred,
+                            identifier.voided,
+                            identifier.location_id,
+                            CASE
+                                WHEN REGEXP(identifier.identifier, '^[A-Za-z][0-9]{2}')
+                                THEN CONCAT(UPPER(SUBSTRING(identifier.identifier, 1, 1)), CAST(TRY_CAST(SUBSTRING(identifier.identifier, 2, 2) AS INT) AS STRING))
+                            END AS location_code
+                        FROM patient_identifier identifier
+                        LEFT JOIN patient_identifier_type identifier_type ON identifier.identifier_type = identifier_type.patient_identifier_type_id
+                    ) identifier_rows
+                    GROUP BY identifier_rows.patient_id
+                ) id_agg
+                LEFT JOIN (
+                    SELECT /*+ STATE_TTL('named_locations' = '0') */
+                        named_locations.code,
+                        MIN(named_locations.location_id) AS location_id
+                    FROM (
+                        SELECT UPPER(TRIM(location.name)) AS code, location.location_id
+                        FROM location
+                        WHERE location.retired = false
+                    ) named_locations
+                    GROUP BY named_locations.code
+                ) coded_location ON coded_location.code = id_agg.location_code
+            ) ids ON ids.patient_id = with_address.patient_id
+        ) with_ids
         LEFT JOIN (
-            SELECT /*+ STATE_TTL('identifier_rows' = '0') */
-                identifier_rows.patient_id,
-                LISTAGG(CONCAT_WS(': ', identifier_rows.identifier_type_name, identifier_rows.identifier), ', ') AS identifiers,
-                COALESCE(
-                    MIN(CASE WHEN identifier_rows.preferred = true AND identifier_rows.voided = false THEN identifier_rows.location_id END),
-                    MIN(CASE WHEN identifier_rows.voided = false THEN identifier_rows.location_id END)
-                ) AS registration_location_id
+            SELECT /*+ STATE_TTL('first_visit_ids' = '0', 'v' = '0') */
+                first_visit_ids.patient_id,
+                v.location_id
             FROM (
-                SELECT /*+ STATE_TTL('identifier' = '0', 'identifier_type' = '0') */
-                    identifier.patient_id,
-                    identifier_type.name AS identifier_type_name,
-                    identifier.identifier,
-                    identifier.preferred,
-                    identifier.voided,
-                    identifier.location_id
-                FROM patient_identifier identifier
-                LEFT JOIN patient_identifier_type identifier_type ON identifier.identifier_type = identifier_type.patient_identifier_type_id
-            ) identifier_rows
-            GROUP BY identifier_rows.patient_id
-        ) ids ON ids.patient_id = with_address.patient_id
+                SELECT /*+ STATE_TTL('located_visits' = '0') */
+                    located_visits.patient_id,
+                    MIN(located_visits.visit_id) AS visit_id
+                FROM (
+                    SELECT visit.patient_id, visit.visit_id
+                    FROM visit
+                    WHERE visit.voided = false AND visit.location_id IS NOT NULL
+                ) located_visits
+                GROUP BY located_visits.patient_id
+            ) first_visit_ids
+            LEFT JOIN visit v ON v.visit_id = first_visit_ids.visit_id
+        ) first_visit ON first_visit.patient_id = with_ids.patient_id
     ) with_identifiers
     LEFT JOIN location ON with_identifiers.registration_location_id = location.location_id
 ) with_location

@@ -47,7 +47,8 @@ FROM
     LEFT JOIN visit visit ON encounter.visit_id = visit.visit_id
     LEFT JOIN encounter_type encounter_type ON encounter.encounter_type = encounter_type.encounter_type_id
     LEFT JOIN visit_type visit_type ON visit.visit_type_id = visit_type.visit_type_id
-    LEFT JOIN location location ON obs.location_id = location.location_id
+    -- An observation with no location of its own takes its encounter's, then its visit's.
+    LEFT JOIN location location ON COALESCE(obs.location_id, encounter.location_id, visit.location_id) = location.location_id
     LEFT JOIN concept_name concept_concept_name ON obs.concept_id = concept_concept_name.concept_id AND concept_concept_name.locale LIKE 'en' AND concept_concept_name.voided = false AND concept_concept_name.locale_preferred = true
     LEFT JOIN person patient ON obs.person_id = patient.person_id
     LEFT JOIN person creator ON obs.creator = creator.person_id
